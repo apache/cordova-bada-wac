@@ -1,6 +1,6 @@
-// commit 16863d60915915ee30cd370a87513ed44cc9a3c9
+// commit cb7a4c7a4a680eccaef768a2e0c6e4631d39fcaf
 
-// File generated at :: Fri Apr 27 2012 17:10:12 GMT-0700 (Pacific Daylight Time)
+// File generated at :: Mon Apr 30 2012 14:56:25 GMT-0700 (Pacific Daylight Time)
 
 /*
  Licensed to the Apache Software Foundation (ASF) under one
@@ -3511,7 +3511,7 @@ Device.prototype.getInfo = function(success, fail, args) {
            me.platform = os_vendor + " " + os_name;
            me.version = os_version;
            me.uuid = uuid;
-           me.cordova = "1.6.0";
+           me.cordova = "1.7.0";
            success(me);
        }
    };
