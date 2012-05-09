@@ -1,6 +1,6 @@
-// commit 6cb6e6cfb5d85017d2b2f24203d9078f1be775a8
+// commit dc4219d9df8ee32d2e7e3566ca10d63d4672db8a
 
-// File generated at :: Wed May 09 2012 02:49:00 GMT-0700 (Pacific Daylight Time)
+// File generated at :: Wed May 09 2012 05:06:13 GMT-0700 (Pacific Daylight Time)
 
 /*
  Licensed to the Apache Software Foundation (ASF) under one
@@ -921,7 +921,9 @@ var plugins = {
     "NetworkStatus": require('cordova/plugin/bada/NetworkStatus'),
     "Accelerometer": require('cordova/plugin/bada/Accelerometer'),
     "Notification": require('cordova/plugin/bada/Notification'),
-    "Compass": require('cordova/plugin/bada/Compass')
+    "Compass": require('cordova/plugin/bada/Compass'),
+    "Capture": require('cordova/plugin/bada/Capture'),
+    "Camera": require('cordova/plugin/bada/Camera')
 };
 
 module.exports = function(success, fail, service, action, args) {
@@ -954,9 +956,9 @@ module.exports = {
                 device: {
                     path: "cordova/plugin/bada/device"
                 },
-                camera: {
-                    path: "cordova/plugin/bada/Camera"
-                },
+//                camera: {
+//                    path: "cordova/plugin/bada/Camera"
+//                },
                 capture: {
                     path: "cordova/plugin/bada/Capture"
                 }
@@ -3333,7 +3335,7 @@ define("cordova/plugin/bada/Camera", function(require, exports, module) {
 module.exports = {
     _mainCamera: null,
     _cams: [],
-    getPicture: function(success, fail, cameraOptions) {
+    takePicture: function(success, fail, cameraOptions) {
         var dataList = [];
         dataList[0] = "type:camera";
 
@@ -3420,12 +3422,37 @@ module.exports = {
         if(appcontrolobject) {
             appcontrolobject.start(dataList, function(cbtype, appControlId, operationId, resultList) {
                 var i;
+                var pluginResult = [];
+                if(cbtype === "onAppControlCompleted") {
+                    for(i = 1 ; i < resultList.length ; i += 1) {
+                       if(resultList[i]) {
+                           //console.log("resultList[" + i + "] = " + resultList[i]);
+                           pluginResult.push( {fullPath: resultList[i]} );
+                       }
+                    }
+                    success(pluginResult);
+                } else {
+                    var error = {message: "An error occured while capturing image", code: 0};
+                    fail(error);
+                }
+            });
+        }
+    },
+    captureVideo: function(success, fail, options) {
+        var dataList = [];
+        dataList[0] = "type:camcorder";
+
+        var appcontrolobject = Osp.App.AppManager.findAppControl("osp.appcontrol.provider.camera", "osp.appcontrol.operation.record");
+
+        if(appcontrolobject) {
+            appcontrolobject.start(dataList, function(cbtype, appControlId, operationId, resultList) {
+                var i;
                 var mediaFiles = [];
                 if(cbtype === "onAppControlCompleted") {
                     for(i = 1 ; i < resultList.length ; i += 1) {
                        if(resultList[i]) {
                            //console.log("resultList[" + i + "] = " + resultList[i]);
-                           mediaFiles.push( {path: resultList[i]} );
+                           mediaFiles.push( {fullPath: resultList[i]} );
                        }
                     }
                     success(mediaFiles);
@@ -3436,7 +3463,7 @@ module.exports = {
             });
         }
 
-    },
+    }
 };
 
 });
