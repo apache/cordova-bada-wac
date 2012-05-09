@@ -267,31 +267,45 @@ function captureImage2() {
 function getPicture() {
 	var success = function(imageURI) {
 		var i;
-		var images = document.getElementById("images");
+		var media = document.getElementById("media");
 		var image = document.createElement("img");
 		image.src = imageURI;
 		image.style.width = "256px";
-		images.appendChild(image);
+		media.appendChild(image);
 	};
 	var fail = function(error) {
 		console.log("ERROR"+JSON.stringify(error));
 	};
-	navigator.camera.getPicture(success, fail);	
+	navigator.camera.getPicture(success, fail, {});	
 }
 
 function captureImage() {
 	var success = function(mediaFiles) {
 		var i;
-		var images = document.getElementById("images");
+		var media = document.getElementById("media");
 		for(i = 0 ; i < mediaFiles.length ; i += 1) {
 			var image = document.createElement("img");
-			image.src = mediaFiles[i].path;
+			image.src = mediaFiles[i].fullPath;
 			image.style.width = "256px";
-			images.appendChild(image);
+			media.appendChild(image);
 		}
 	};
 	var fail = function(error) {
 		console.log("ERROR"+JSON.stringify(error));
 	};
-	navigator.capture.captureImage(success, fail);
+	navigator.device.capture.captureImage(success, fail);
+}
+
+function captureVideo() {
+	var success = function(mediaFiles) {
+		var i;
+		var media = document.getElementById("media");
+		for(i = 0 ; i < mediaFiles.length ; i += 1) {
+			console.log(mediaFiles[i].fullPath);
+		}
+	};
+	var fail = function(error) {
+		console.log(error);
+	};
+	navigator.device.capture.captureVideo(success, fail);
 }
