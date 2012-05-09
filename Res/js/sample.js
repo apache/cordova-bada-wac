@@ -235,10 +235,10 @@ function notificationLightOn() {
 function cameraPreview() {
     var preview = document.getElementById("preview");
     if(preview.childNodes[0]) {
-    	preview.removeChild(preview.childNodes[0]);
+    	navigator.camera.hidePreview("preview");
     	document.getElementById("cameraControls").style.display = "none";
     } else {
-    	navigator.camera.getPreview();
+    	navigator.camera.showPreview("preview");
     	document.getElementById("cameraControls").style.display = "";
     }
 }
@@ -246,14 +246,14 @@ function cameraPreview() {
 function startVideoCapture() {
 	var success = function(filename) {console.log(filename); };
 	var fail = function(error) { console.log("ERROR "+JSON.stringify(error)); };
-	navigator.capture.captureVideo(success, fail, {duration: 5000, destinationFilename: "videos/a.3gp"});
+	navigator.capture.startVideoCapture(success, fail, {duration: 5000, destinationFilename: "videos/a.3gp"});
 }
 
 function stopVideoCapture() {
 	navigator.capture.stopVideoCapture();
 }
 
-function captureImage() {
+function captureImage2() {
 	var success = function(filename) {
 		console.log(filename);
 	};
@@ -262,4 +262,36 @@ function captureImage() {
 	};
 	var options = { destinationFilename: "images/cam01.jpg", highRes: false};
 	navigator.capture.captureImage(success, fail, options);
+}
+
+function getPicture() {
+	var success = function(imageURI) {
+		var i;
+		var images = document.getElementById("images");
+		var image = document.createElement("img");
+		image.src = imageURI;
+		image.style.width = "256px";
+		images.appendChild(image);
+	};
+	var fail = function(error) {
+		console.log("ERROR"+JSON.stringify(error));
+	};
+	navigator.camera.getPicture(success, fail);	
+}
+
+function captureImage() {
+	var success = function(mediaFiles) {
+		var i;
+		var images = document.getElementById("images");
+		for(i = 0 ; i < mediaFiles.length ; i += 1) {
+			var image = document.createElement("img");
+			image.src = mediaFiles[i].path;
+			image.style.width = "256px";
+			images.appendChild(image);
+		}
+	};
+	var fail = function(error) {
+		console.log("ERROR"+JSON.stringify(error));
+	};
+	navigator.capture.captureImage(success, fail);
 }
