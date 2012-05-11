@@ -309,3 +309,96 @@ function captureVideo() {
 	};
 	navigator.device.capture.captureVideo(success, fail);
 }
+
+function createContact() {
+	function onSuccess(contact) {
+	    alert("Save Success "+JSON.stringify(contact));
+	};
+
+	function onError(contactError) {
+	    alert("Error = " + contactError.code);
+	};
+
+	// create a new contact object
+	var contact = navigator.contacts.create();
+	contact.displayName = "Plumber";
+	contact.nickname = "Plumber";       //specify both to support all devices
+
+	// populate some fields
+	var name = new ContactName();
+	name.givenName = "Jackson";
+	name.familyName = "Doe";
+	contact.name = name;
+
+	// save to device
+	contact.save(onSuccess,onError);
+}
+
+function findContact() {	
+	function onSuccess(contacts) {
+		alert(JSON.stringify(contacts));
+	    alert('Found ' + contacts.length + ' contacts.');
+	};
+
+	function onError(contactError) {
+	    alert('onError!');
+	};
+
+	var options = new ContactFindOptions();
+	options.filter="Jane"; 
+	var fields = ["displayName", "name"];
+	navigator.contacts.find(fields, onSuccess, onError, options);
+
+}
+
+function updateContact() {
+	function onSuccess(contact) {
+	    alert("Save Success "+JSON.stringify(contact));
+	};
+
+	function onError(contactError) {
+	    alert("Error = " + contactError.code);
+	};
+
+	// create a new contact object
+	var contact = navigator.contacts.create();
+	contact.displayName = "Plumber";
+	contact.nickname = "Plumber";       //specify both to support all devices
+
+	// populate some fields
+	var name = new ContactName();
+	name.givenName = "Jane";
+	name.familyName = "Doe";
+	contact.name = name;
+
+	// save to device
+	contact.save(onSuccess,onError);
+	
+	// update
+	name.givenName = "John";
+	contact.name = name;
+	contact.save(onSuccess,onError);
+}
+
+function removeContact() {
+	function onSuccess(contacts) {
+		var i, j;
+		var success = function(c) {
+			alert('contact removed!');
+		};
+		var error = function(c) {
+			alert('error removing');
+		};
+		for(i = 0, j = contacts.length ; i < j ; i++) {
+			contacts[i].remove(success, error);
+		}
+	};
+
+	function onError(contactError) {
+	    alert('onError!');
+	};
+	var options = new ContactFindOptions();
+	options.filter="Doe"; 
+	var fields = ["displayName", "name"];
+	navigator.contacts.find(fields, onSuccess, onError, options);	
+}
