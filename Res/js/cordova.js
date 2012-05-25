@@ -1,6 +1,6 @@
-// commit 3edbc444b2091f11f149dea225b0ad8da4120f71
+// commit c2cbb549fff51fc1aa6bee9162adf5ef5a727fb4
 
-// File generated at :: Fri May 25 2012 09:55:06 GMT-0700 (Pacific Daylight Time)
+// File generated at :: Fri May 25 2012 10:08:19 GMT-0700 (Pacific Daylight Time)
 
 /*
  Licensed to the Apache Software Foundation (ASF) under one
@@ -917,9 +917,7 @@ var plugins = {
     "Compass": require('cordova/plugin/bada/Compass'),
     "Capture": require('cordova/plugin/bada/Capture'),
     "Camera": require('cordova/plugin/bada/Camera'),
-    "Contacts": require('cordova/plugin/bada/Contacts'),
-    "File": require('cordova/plugin/bada/File'),
-    "FileTransfer": require('cordova/plugin/bada/FileTransfer')
+    "Contacts": require('cordova/plugin/bada/Contacts')
 };
 
 module.exports = function(success, fail, service, action, args) {
@@ -4110,7 +4108,7 @@ Device.prototype.getInfo = function(success, fail, args) {
            me.platform = os_vendor + " " + os_name;
            me.version = os_version;
            me.uuid = uuid;
-           me.cordova = "1.7.0";
+           me.cordova = "1.8.0";
            success(me);
        }
    };
@@ -5244,7 +5242,6 @@ var requestFileSystem = function(type, size, successCallback, errorCallback) {
 };
 
 module.exports = requestFileSystem;
-
 });
 
 // file: lib\common\plugin\resolveLocalFileSystemURI.js
