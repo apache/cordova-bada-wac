@@ -1,6 +1,6 @@
 // commit 3edbc444b2091f11f149dea225b0ad8da4120f71
 
-// File generated at :: Fri May 25 2012 09:44:15 GMT-0700 (Pacific Daylight Time)
+// File generated at :: Fri May 25 2012 09:55:06 GMT-0700 (Pacific Daylight Time)
 
 /*
  Licensed to the Apache Software Foundation (ASF) under one
@@ -952,9 +952,9 @@ module.exports = {
                 device: {
                     path: "cordova/plugin/bada/device"
                 },
-//                camera: {
-//                    path: "cordova/plugin/bada/Camera"
-//                },
+                camera: {
+                    path: "cordova/plugin/bada/Camera"
+                },
                 capture: {
                     path: "cordova/plugin/bada/Capture"
                 }
