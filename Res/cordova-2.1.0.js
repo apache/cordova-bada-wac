@@ -1,6 +1,6 @@
-// commit 114cf5304a74ff8f7c9ff1d21cf5652298af04b0
+// commit ebb6508d9a3134416e0dff92d50439b01fdcbc0b
 
-// File generated at :: Wed Jul 18 2012 16:11:28 GMT-0700 (Pacific Daylight Time)
+// File generated at :: Thu Aug 23 2012 17:37:27 GMT-0700 (Pacific Daylight Time)
 
 /*
  Licensed to the Apache Software Foundation (ASF) under one
@@ -29,6 +29,10 @@ var require,
 
 (function () {
     var modules = {};
+    // Stack of moduleIds currently being built.
+    var requireStack = [];
+    // Map of module ID -> index into requireStack of modules currently being built.
+    var inProgressModules = {};
 
     function build(module) {
         var factory = module.factory;
@@ -41,8 +45,21 @@ var require,
     require = function (id) {
         if (!modules[id]) {
             throw "module " + id + " not found";
+        } else if (id in inProgressModules) {
+            var cycle = requireStack.slice(inProgressModules[id]).join('->') + '->' + id;
+            throw "Cycle in require graph: " + cycle;
         }
-        return modules[id].factory ? build(modules[id]) : modules[id].exports;
+        if (modules[id].factory) {
+            try {
+                inProgressModules[id] = requireStack.length;
+                requireStack.push(id);
+                return build(modules[id]);
+            } finally {
+                delete inProgressModules[id];
+                requireStack.pop();
+            }
+        }
+        return modules[id].exports;
     };
 
     define = function (id, factory) {
@@ -67,6 +84,7 @@ if (typeof module === "object" && typeof require === "function") {
     module.exports.require = require;
     module.exports.define = define;
 }
+
 // file: lib/cordova.js
 define("cordova", function(require, exports, module) {
 var channel = require('cordova/channel');
@@ -207,10 +225,6 @@ var cordova = {
             window.dispatchEvent(evt);
         }
     },
-    // TODO: this is Android only; think about how to do this better
-    shuttingDown:false,
-    UsePolling:false,
-    // END TODO
 
     // TODO: iOS only
     // This queue holds the currently executing command and all pending
@@ -2415,10 +2429,12 @@ FileTransfer.prototype.upload = function(filePath, server, successCallback, erro
     var mimeType = null;
     var params = null;
     var chunkedMode = true;
+    var headers = null;
     if (options) {
         fileKey = options.fileKey;
         fileName = options.fileName;
         mimeType = options.mimeType;
+        headers = options.headers;
         if (options.chunkedMode !== null || typeof options.chunkedMode != "undefined") {
             chunkedMode = options.chunkedMode;
         }
@@ -2435,7 +2451,7 @@ FileTransfer.prototype.upload = function(filePath, server, successCallback, erro
         errorCallback(error);
     };
 
-    exec(successCallback, fail, 'FileTransfer', 'upload', [filePath, server, fileKey, fileName, mimeType, params, trustAllHosts, chunkedMode]);
+    exec(successCallback, fail, 'FileTransfer', 'upload', [filePath, server, fileKey, fileName, mimeType, params, trustAllHosts, chunkedMode, headers]);
 };
 
 /**
@@ -2505,15 +2521,19 @@ define("cordova/plugin/FileUploadOptions", function(require, exports, module) {
  * @param fileName {String}  Filename to be used by the server. Defaults to image.jpg.
  * @param mimeType {String}  Mimetype of the uploaded file. Defaults to image/jpeg.
  * @param params {Object}    Object with key: value params to send to the server.
+ * @param headers {Object}   Keys are header names, values are header values. Multiple
+ *                           headers of the same name are not supported.
  */
-var FileUploadOptions = function(fileKey, fileName, mimeType, params) {
+var FileUploadOptions = function(fileKey, fileName, mimeType, params, headers) {
     this.fileKey = fileKey || null;
     this.fileName = fileName || null;
     this.mimeType = mimeType || null;
     this.params = params || null;
+    this.headers = headers || null;
 };
 
 module.exports = FileUploadOptions;
+
 });
 
 // file: lib\common\plugin\FileUploadResult.js
@@ -2908,7 +2928,6 @@ Media.prototype.stop = function() {
     var me = this;
     exec(function() {
         me._position = 0;
-        me.successCallback();
     }, this.errorCallback, "Media", "stopPlayingAudio", [this.id]);
 };
 
@@ -2954,14 +2973,14 @@ Media.prototype.getCurrentPosition = function(success, fail) {
  * Start recording audio file.
  */
 Media.prototype.startRecord = function() {
-    exec(this.successCallback, this.errorCallback, "Media", "startRecordingAudio", [this.id, this.src]);
+    exec(null, this.errorCallback, "Media", "startRecordingAudio", [this.id, this.src]);
 };
 
 /**
  * Stop recording audio file.
  */
 Media.prototype.stopRecord = function() {
-    exec(this.successCallback, this.errorCallback, "Media", "stopRecordingAudio", [this.id]);
+    exec(null, this.errorCallback, "Media", "stopRecordingAudio", [this.id]);
 };
 
 /**
@@ -2990,13 +3009,13 @@ Media.onStatus = function(id, msg, value) {
     var media = mediaObjects[id];
     // If state update
     if (msg === Media.MEDIA_STATE) {
+        if (media.statusCallback) {
+            media.statusCallback(value);
+        }
         if (value === Media.MEDIA_STOPPED) {
             if (media.successCallback) {
                 media.successCallback();
             }
-        }
-        if (media.statusCallback) {
-            media.statusCallback(value);
         }
     }
     else if (msg === Media.MEDIA_DURATION) {
@@ -3069,28 +3088,6 @@ MediaFile.prototype.getFormatData = function(successCallback, errorCallback) {
     } else {
         exec(successCallback, errorCallback, "Capture", "getFormatData", [this.fullPath, this.type]);
     }
-};
-
-// TODO: can we axe this?
-/**
- * Casts a PluginResult message property  (array of objects) to an array of MediaFile objects
- * (used in Objective-C and Android)
- *
- * @param {PluginResult} pluginResult
- */
-MediaFile.cast = function(pluginResult) {
-    var mediaFiles = [];
-    for (var i=0; i<pluginResult.message.length; i++) {
-        var mediaFile = new MediaFile();
-        mediaFile.name = pluginResult.message[i].name;
-        mediaFile.fullPath = pluginResult.message[i].fullPath;
-        mediaFile.type = pluginResult.message[i].type;
-        mediaFile.lastModifiedDate = pluginResult.message[i].lastModifiedDate;
-        mediaFile.size = pluginResult.message[i].size;
-        mediaFiles.push(mediaFile);
-    }
-    pluginResult.message = mediaFiles;
-    return pluginResult;
 };
 
 module.exports = MediaFile;
@@ -4148,7 +4145,7 @@ Device.prototype.getDeviceInfo = function(success, fail, args) {
            me.platform = os_vendor + " " + os_name;
            me.version = os_version;
            me.uuid = uuid;
-           me.cordova = "2.0.0";
+           me.cordova = "2.1.0";
            success(me);
        }
    };
@@ -4756,6 +4753,25 @@ Device.prototype.getInfo = function(successCallback, errorCallback) {
 };
 
 module.exports = new Device();
+
+});
+
+// file: lib\common\plugin\echo.js
+define("cordova/plugin/echo", function(require, exports, module) {
+var exec = require('cordova/exec');
+
+/**
+ * Sends the given message through exec() to the Echo plugink, which sends it back to the successCallback.
+ * @param successCallback  invoked with a FileSystem object
+ * @param errorCallback  invoked if error occurs retrieving file system
+ * @param message  The string to be echoed.
+ * @param forceAsync  Whether to force an async return value (for testing native->js bridge).
+ */
+module.exports = function(successCallback, errorCallback, message, forceAsync) {
+    var action = forceAsync ? 'echoAsync' : 'echo';
+    exec(successCallback, errorCallback, "Echo", action, [message]);
+};
+
 
 });
 
