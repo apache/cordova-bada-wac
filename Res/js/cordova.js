@@ -1,6 +1,6 @@
-// commit 2aa46aa0eef2ba641cf91793735152d7fb5b6998
+// commit a91a8f60b9f12bb74fa3a7f6c640308903ab73bf
 
-// File generated at :: Mon Sep 03 2012 21:27:27 GMT-0700 (Pacific Daylight Time)
+// File generated at :: Tue Sep 11 2012 17:59:00 GMT-0700 (PDT)
 
 /*
  Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +23,7 @@
 
 ;(function() {
 
-// file: lib\scripts\require.js
+// file: lib/scripts/require.js
 var require,
     define;
 
@@ -186,13 +186,19 @@ var cordova = {
     },
     /**
      * Method to fire event from native code
+     * bNoDetach is required for events which cause an exception which needs to be caught in native code     
      */
-    fireDocumentEvent: function(type, data) {
+    fireDocumentEvent: function(type, data, bNoDetach) {
         var evt = createEvent(type, data);
         if (typeof documentEventHandlers[type] != 'undefined') {
-            setTimeout(function() {
-                documentEventHandlers[type].fire(evt);
-            }, 0);
+            if( bNoDetach ) {
+              documentEventHandlers[type].fire(evt);
+            }
+            else {
+              setTimeout(function() {
+                  documentEventHandlers[type].fire(evt);
+              }, 0);
+            }
         } else {
             document.dispatchEvent(evt);
         }
@@ -305,7 +311,7 @@ module.exports = cordova;
 
 });
 
-// file: lib\common\builder.js
+// file: lib/common/builder.js
 define("cordova/builder", function(require, exports, module) {
 var utils = require('cordova/utils');
 
@@ -398,7 +404,7 @@ module.exports = {
 
 });
 
-// file: lib\common\channel.js
+// file: lib/common/channel.js
 define("cordova/channel", function(require, exports, module) {
 var utils = require('cordova/utils'),
     nextGuid = 1;
@@ -660,7 +666,7 @@ module.exports = channel;
 
 });
 
-// file: lib\common\common.js
+// file: lib/common/common.js
 define("cordova/common", function(require, exports, module) {
 module.exports = {
     objects: {
@@ -871,7 +877,7 @@ module.exports = {
 
 });
 
-// file: lib\bada\exec.js
+// file: lib/bada/exec.js
 define("cordova/exec", function(require, exports, module) {
 var plugins = {
     "Device": require('cordova/plugin/bada/device'),
@@ -898,7 +904,7 @@ module.exports = function(success, fail, service, action, args) {
 
 });
 
-// file: lib\bada\platform.js
+// file: lib/bada/platform.js
 define("cordova/platform", function(require, exports, module) {
 module.exports = {
     id: "bada",
@@ -937,7 +943,7 @@ module.exports = {
 
 });
 
-// file: lib\common\plugin\Acceleration.js
+// file: lib/common/plugin/Acceleration.js
 define("cordova/plugin/Acceleration", function(require, exports, module) {
 var Acceleration = function(x, y, z, timestamp) {
     this.x = x;
@@ -950,7 +956,7 @@ module.exports = Acceleration;
 
 });
 
-// file: lib\common\plugin\Camera.js
+// file: lib/common/plugin/Camera.js
 define("cordova/plugin/Camera", function(require, exports, module) {
 var exec = require('cordova/exec'),
     Camera = require('cordova/plugin/CameraConstants');
@@ -1070,7 +1076,7 @@ cameraExport.cleanup = function(successCallback, errorCallback) {
 module.exports = cameraExport;
 });
 
-// file: lib\common\plugin\CameraConstants.js
+// file: lib/common/plugin/CameraConstants.js
 define("cordova/plugin/CameraConstants", function(require, exports, module) {
 module.exports = {
   DestinationType:{
@@ -1101,7 +1107,7 @@ module.exports = {
 };
 });
 
-// file: lib\common\plugin\CameraPopoverOptions.js
+// file: lib/common/plugin/CameraPopoverOptions.js
 define("cordova/plugin/CameraPopoverOptions", function(require, exports, module) {
 var Camera = require('cordova/plugin/CameraConstants');
 
@@ -1121,7 +1127,7 @@ var CameraPopoverOptions = function(x,y,width,height,arrowDir){
 module.exports = CameraPopoverOptions;
 });
 
-// file: lib\common\plugin\CaptureAudioOptions.js
+// file: lib/common/plugin/CaptureAudioOptions.js
 define("cordova/plugin/CaptureAudioOptions", function(require, exports, module) {
 /**
  * Encapsulates all audio capture operation configuration options.
@@ -1138,7 +1144,7 @@ var CaptureAudioOptions = function(){
 module.exports = CaptureAudioOptions;
 });
 
-// file: lib\common\plugin\CaptureError.js
+// file: lib/common/plugin/CaptureError.js
 define("cordova/plugin/CaptureError", function(require, exports, module) {
 /**
  * The CaptureError interface encapsulates all errors in the Capture API.
@@ -1161,7 +1167,7 @@ CaptureError.CAPTURE_NOT_SUPPORTED = 20;
 module.exports = CaptureError;
 });
 
-// file: lib\common\plugin\CaptureImageOptions.js
+// file: lib/common/plugin/CaptureImageOptions.js
 define("cordova/plugin/CaptureImageOptions", function(require, exports, module) {
 /**
  * Encapsulates all image capture operation configuration options.
@@ -1176,7 +1182,7 @@ var CaptureImageOptions = function(){
 module.exports = CaptureImageOptions;
 });
 
-// file: lib\common\plugin\CaptureVideoOptions.js
+// file: lib/common/plugin/CaptureVideoOptions.js
 define("cordova/plugin/CaptureVideoOptions", function(require, exports, module) {
 /**
  * Encapsulates all video capture operation configuration options.
@@ -1193,7 +1199,7 @@ var CaptureVideoOptions = function(){
 module.exports = CaptureVideoOptions;
 });
 
-// file: lib\common\plugin\CompassError.js
+// file: lib/common/plugin/CompassError.js
 define("cordova/plugin/CompassError", function(require, exports, module) {
 /**
  *  CompassError.
@@ -1210,7 +1216,7 @@ CompassError.COMPASS_NOT_SUPPORTED = 20;
 module.exports = CompassError;
 });
 
-// file: lib\common\plugin\CompassHeading.js
+// file: lib/common/plugin/CompassHeading.js
 define("cordova/plugin/CompassHeading", function(require, exports, module) {
 var CompassHeading = function(magneticHeading, trueHeading, headingAccuracy, timestamp) {
   this.magneticHeading = (magneticHeading !== undefined ? magneticHeading : null);
@@ -1222,7 +1228,7 @@ var CompassHeading = function(magneticHeading, trueHeading, headingAccuracy, tim
 module.exports = CompassHeading;
 });
 
-// file: lib\common\plugin\ConfigurationData.js
+// file: lib/common/plugin/ConfigurationData.js
 define("cordova/plugin/ConfigurationData", function(require, exports, module) {
 /**
  * Encapsulates a set of parameters that the capture device supports.
@@ -1241,7 +1247,7 @@ function ConfigurationData() {
 module.exports = ConfigurationData;
 });
 
-// file: lib\common\plugin\Connection.js
+// file: lib/common/plugin/Connection.js
 define("cordova/plugin/Connection", function(require, exports, module) {
 /**
  * Network status
@@ -1257,7 +1263,7 @@ module.exports = {
 };
 });
 
-// file: lib\common\plugin\Contact.js
+// file: lib/common/plugin/Contact.js
 define("cordova/plugin/Contact", function(require, exports, module) {
 var exec = require('cordova/exec'),
     ContactError = require('cordova/plugin/ContactError'),
@@ -1439,7 +1445,7 @@ module.exports = Contact;
 
 });
 
-// file: lib\common\plugin\ContactAddress.js
+// file: lib/common/plugin/ContactAddress.js
 define("cordova/plugin/ContactAddress", function(require, exports, module) {
 /**
 * Contact address.
@@ -1468,7 +1474,7 @@ var ContactAddress = function(pref, type, formatted, streetAddress, locality, re
 module.exports = ContactAddress;
 });
 
-// file: lib\common\plugin\ContactError.js
+// file: lib/common/plugin/ContactError.js
 define("cordova/plugin/ContactError", function(require, exports, module) {
 /**
  *  ContactError.
@@ -1493,7 +1499,7 @@ ContactError.PERMISSION_DENIED_ERROR = 20;
 module.exports = ContactError;
 });
 
-// file: lib\common\plugin\ContactField.js
+// file: lib/common/plugin/ContactField.js
 define("cordova/plugin/ContactField", function(require, exports, module) {
 /**
 * Generic contact field.
@@ -1513,7 +1519,7 @@ var ContactField = function(type, value, pref) {
 module.exports = ContactField;
 });
 
-// file: lib\common\plugin\ContactFindOptions.js
+// file: lib/common/plugin/ContactFindOptions.js
 define("cordova/plugin/ContactFindOptions", function(require, exports, module) {
 /**
  * ContactFindOptions.
@@ -1530,7 +1536,7 @@ var ContactFindOptions = function(filter, multiple) {
 module.exports = ContactFindOptions;
 });
 
-// file: lib\common\plugin\ContactName.js
+// file: lib/common/plugin/ContactName.js
 define("cordova/plugin/ContactName", function(require, exports, module) {
 /**
 * Contact name.
@@ -1554,7 +1560,7 @@ var ContactName = function(formatted, familyName, givenName, middle, prefix, suf
 module.exports = ContactName;
 });
 
-// file: lib\common\plugin\ContactOrganization.js
+// file: lib/common/plugin/ContactOrganization.js
 define("cordova/plugin/ContactOrganization", function(require, exports, module) {
 /**
 * Contact organization.
@@ -1581,7 +1587,7 @@ var ContactOrganization = function(pref, type, name, dept, title) {
 module.exports = ContactOrganization;
 });
 
-// file: lib\common\plugin\Coordinates.js
+// file: lib/common/plugin/Coordinates.js
 define("cordova/plugin/Coordinates", function(require, exports, module) {
 /**
  * This class contains position information.
@@ -1634,7 +1640,7 @@ module.exports = Coordinates;
 
 });
 
-// file: lib\common\plugin\DirectoryEntry.js
+// file: lib/common/plugin/DirectoryEntry.js
 define("cordova/plugin/DirectoryEntry", function(require, exports, module) {
 var utils = require('cordova/utils'),
     exec = require('cordova/exec'),
@@ -1720,7 +1726,7 @@ module.exports = DirectoryEntry;
 
 });
 
-// file: lib\common\plugin\DirectoryReader.js
+// file: lib/common/plugin/DirectoryReader.js
 define("cordova/plugin/DirectoryReader", function(require, exports, module) {
 var exec = require('cordova/exec'),
     FileError = require('cordova/plugin/FileError') ;
@@ -1767,7 +1773,7 @@ module.exports = DirectoryReader;
 
 });
 
-// file: lib\common\plugin\Entry.js
+// file: lib/common/plugin/Entry.js
 define("cordova/plugin/Entry", function(require, exports, module) {
 var exec = require('cordova/exec'),
     FileError = require('cordova/plugin/FileError'),
@@ -1989,7 +1995,7 @@ Entry.prototype.getParent = function(successCallback, errorCallback) {
 module.exports = Entry;
 });
 
-// file: lib\common\plugin\File.js
+// file: lib/common/plugin/File.js
 define("cordova/plugin/File", function(require, exports, module) {
 /**
  * Constructor.
@@ -2011,7 +2017,7 @@ var File = function(name, fullPath, type, lastModifiedDate, size){
 module.exports = File;
 });
 
-// file: lib\common\plugin\FileEntry.js
+// file: lib/common/plugin/FileEntry.js
 define("cordova/plugin/FileEntry", function(require, exports, module) {
 var utils = require('cordova/utils'),
     exec = require('cordova/exec'),
@@ -2078,7 +2084,7 @@ FileEntry.prototype.file = function(successCallback, errorCallback) {
 module.exports = FileEntry;
 });
 
-// file: lib\common\plugin\FileError.js
+// file: lib/common/plugin/FileError.js
 define("cordova/plugin/FileError", function(require, exports, module) {
 /**
  * FileError
@@ -2107,7 +2113,7 @@ FileError.PATH_EXISTS_ERR = 12;
 module.exports = FileError;
 });
 
-// file: lib\common\plugin\FileReader.js
+// file: lib/common/plugin/FileReader.js
 define("cordova/plugin/FileReader", function(require, exports, module) {
 var exec = require('cordova/exec'),
     FileError = require('cordova/plugin/FileError'),
@@ -2360,7 +2366,7 @@ FileReader.prototype.readAsArrayBuffer = function(file) {
 module.exports = FileReader;
 });
 
-// file: lib\common\plugin\FileSystem.js
+// file: lib/common/plugin/FileSystem.js
 define("cordova/plugin/FileSystem", function(require, exports, module) {
 var DirectoryEntry = require('cordova/plugin/DirectoryEntry');
 
@@ -2382,7 +2388,7 @@ module.exports = FileSystem;
 
 });
 
-// file: lib\common\plugin\FileTransfer.js
+// file: lib/common/plugin/FileTransfer.js
 define("cordova/plugin/FileTransfer", function(require, exports, module) {
 var exec = require('cordova/exec'),
     FileTransferError = require('cordova/plugin/FileTransferError');
@@ -2474,7 +2480,7 @@ module.exports = FileTransfer;
 
 });
 
-// file: lib\common\plugin\FileTransferError.js
+// file: lib/common/plugin/FileTransferError.js
 define("cordova/plugin/FileTransferError", function(require, exports, module) {
 /**
  * FileTransferError
@@ -2495,7 +2501,7 @@ module.exports = FileTransferError;
 
 });
 
-// file: lib\common\plugin\FileUploadOptions.js
+// file: lib/common/plugin/FileUploadOptions.js
 define("cordova/plugin/FileUploadOptions", function(require, exports, module) {
 /**
  * Options to customize the HTTP request used to upload files.
@@ -2519,7 +2525,7 @@ module.exports = FileUploadOptions;
 
 });
 
-// file: lib\common\plugin\FileUploadResult.js
+// file: lib/common/plugin/FileUploadResult.js
 define("cordova/plugin/FileUploadResult", function(require, exports, module) {
 /**
  * FileUploadResult
@@ -2534,7 +2540,7 @@ var FileUploadResult = function() {
 module.exports = FileUploadResult;
 });
 
-// file: lib\common\plugin\FileWriter.js
+// file: lib/common/plugin/FileWriter.js
 define("cordova/plugin/FileWriter", function(require, exports, module) {
 var exec = require('cordova/exec'),
     FileError = require('cordova/plugin/FileError'),
@@ -2792,7 +2798,7 @@ module.exports = FileWriter;
 
 });
 
-// file: lib\common\plugin\Flags.js
+// file: lib/common/plugin/Flags.js
 define("cordova/plugin/Flags", function(require, exports, module) {
 /**
  * Supplies arguments to methods that lookup or create files and directories.
@@ -2811,7 +2817,7 @@ function Flags(create, exclusive) {
 module.exports = Flags;
 });
 
-// file: lib\common\plugin\LocalFileSystem.js
+// file: lib/common/plugin/LocalFileSystem.js
 define("cordova/plugin/LocalFileSystem", function(require, exports, module) {
 var exec = require('cordova/exec');
 
@@ -2828,7 +2834,7 @@ LocalFileSystem.PERSISTENT = 1; //persistent
 module.exports = LocalFileSystem;
 });
 
-// file: lib\common\plugin\Media.js
+// file: lib/common/plugin/Media.js
 define("cordova/plugin/Media", function(require, exports, module) {
 var utils = require('cordova/utils'),
     exec = require('cordova/exec');
@@ -2985,60 +2991,81 @@ Media.prototype.setVolume = function(volume) {
  * PRIVATE
  *
  * @param id            The media object id (string)
- * @param status        The status code (int)
- * @param msg           The status message (string)
+ * @param msgType       The 'type' of update this is
+ * @param value         Use of value is determined by the msgType
  */
-Media.onStatus = function(id, msg, value) {
+Media.onStatus = function(id, msgType, value) {
+
     var media = mediaObjects[id];
-    // If state update
-    if (msg === Media.MEDIA_STATE) {
-        if (media.statusCallback) {
-            media.statusCallback(value);
+
+    if(media) {
+        switch(msgType) {
+            case Media.MEDIA_STATE :
+                media.statusCallback && media.statusCallback(value);
+                if(value == Media.MEDIA_STOPPED) {
+                    media.successCallback && media.successCallback();
+                }
+                break;
+            case Media.MEDIA_DURATION :
+                media._duration = value;
+                break;
+            case Media.MEDIA_ERROR :
+                media.errorCallback && media.errorCallback(value); 
+                break;
+            case Media.MEDIA_POSITION :
+                media._position = Number(value);
+                break;
+            default :
+                console && console.error && console.error("Unhandled Media.onStatus :: " + msgType); 
+                break;
         }
-        if (value === Media.MEDIA_STOPPED) {
-            if (media.successCallback) {
-                media.successCallback();
-            }
-        }
     }
-    else if (msg === Media.MEDIA_DURATION) {
-        media._duration = value;
+    else {
+         console && console.error && console.error("Received Media.onStatus callback for unknown media :: " + id);
     }
-    else if (msg === Media.MEDIA_ERROR) {
-        if (media.errorCallback) {
-            // value should be a MediaError object when msg == MEDIA_ERROR
-            media.errorCallback(value);
-        }
-    }
-    else if (msg === Media.MEDIA_POSITION) {
-        media._position = value;
-    }
+
 };
 
 module.exports = Media;
 });
 
-// file: lib\common\plugin\MediaError.js
+// file: lib/common/plugin/MediaError.js
 define("cordova/plugin/MediaError", function(require, exports, module) {
 /**
  * This class contains information about any Media errors.
- * @constructor
- */
-var MediaError = function(code, msg) {
-    this.code = (code !== undefined ? code : null);
-    this.message = msg || "";
-};
+*/
+/*
+ According to :: http://dev.w3.org/html5/spec-author-view/video.html#mediaerror
+ We should never be creating these objects, we should just implement the interface
+ which has 1 property for an instance, 'code'
 
-MediaError.MEDIA_ERR_NONE_ACTIVE    = 0;
-MediaError.MEDIA_ERR_ABORTED        = 1;
-MediaError.MEDIA_ERR_NETWORK        = 2;
-MediaError.MEDIA_ERR_DECODE         = 3;
-MediaError.MEDIA_ERR_NONE_SUPPORTED = 4;
+ instead of doing :
+    errorCallbackFunction( new MediaError(3,'msg') );
+we should simply use a literal :
+    errorCallbackFunction( {'code':3} );
+ */
+
+if(!MediaError) {
+    var MediaError = function(code, msg) {
+        this.code = (typeof code != 'undefined') ? code : null;
+        this.message = msg || ""; // message is NON-standard! do not use!
+    };
+}
+
+MediaError.MEDIA_ERR_NONE_ACTIVE    = MediaError.MEDIA_ERR_NONE_ACTIVE    || 0;
+MediaError.MEDIA_ERR_ABORTED        = MediaError.MEDIA_ERR_ABORTED        || 1;
+MediaError.MEDIA_ERR_NETWORK        = MediaError.MEDIA_ERR_NETWORK        || 2;
+MediaError.MEDIA_ERR_DECODE         = MediaError.MEDIA_ERR_DECODE         || 3;
+MediaError.MEDIA_ERR_NONE_SUPPORTED = MediaError.MEDIA_ERR_NONE_SUPPORTED || 4;
+// TODO: MediaError.MEDIA_ERR_NONE_SUPPORTED is legacy, the W3 spec now defines it as below. 
+// as defined by http://dev.w3.org/html5/spec-author-view/video.html#error-codes
+MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED = MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED || 4;
 
 module.exports = MediaError;
+
 });
 
-// file: lib\common\plugin\MediaFile.js
+// file: lib/common/plugin/MediaFile.js
 define("cordova/plugin/MediaFile", function(require, exports, module) {
 var utils = require('cordova/utils'),
     exec = require('cordova/exec'),
@@ -3077,7 +3104,7 @@ module.exports = MediaFile;
 
 });
 
-// file: lib\common\plugin\MediaFileData.js
+// file: lib/common/plugin/MediaFileData.js
 define("cordova/plugin/MediaFileData", function(require, exports, module) {
 /**
  * MediaFileData encapsulates format information of a media file.
@@ -3099,7 +3126,7 @@ var MediaFileData = function(codecs, bitrate, height, width, duration){
 module.exports = MediaFileData;
 });
 
-// file: lib\common\plugin\Metadata.js
+// file: lib/common/plugin/Metadata.js
 define("cordova/plugin/Metadata", function(require, exports, module) {
 /**
  * Information about the state of the file or directory
@@ -3113,7 +3140,7 @@ var Metadata = function(time) {
 module.exports = Metadata;
 });
 
-// file: lib\common\plugin\Position.js
+// file: lib/common/plugin/Position.js
 define("cordova/plugin/Position", function(require, exports, module) {
 var Coordinates = require('cordova/plugin/Coordinates');
 
@@ -3130,7 +3157,7 @@ module.exports = Position;
 
 });
 
-// file: lib\common\plugin\PositionError.js
+// file: lib/common/plugin/PositionError.js
 define("cordova/plugin/PositionError", function(require, exports, module) {
 /**
  * Position error object
@@ -3151,7 +3178,7 @@ PositionError.TIMEOUT = 3;
 module.exports = PositionError;
 });
 
-// file: lib\common\plugin\ProgressEvent.js
+// file: lib/common/plugin/ProgressEvent.js
 define("cordova/plugin/ProgressEvent", function(require, exports, module) {
 // If ProgressEvent exists in global context, use it already, otherwise use our own polyfill
 // Feature test: See if we can instantiate a native ProgressEvent;
@@ -3201,7 +3228,7 @@ var ProgressEvent = (function() {
 module.exports = ProgressEvent;
 });
 
-// file: lib\common\plugin\accelerometer.js
+// file: lib/common/plugin/accelerometer.js
 define("cordova/plugin/accelerometer", function(require, exports, module) {
 /**
  * This class provides access to device accelerometer data.
@@ -3361,7 +3388,7 @@ module.exports = accelerometer;
 
 });
 
-// file: lib\bada\plugin\bada\Accelerometer.js
+// file: lib/bada/plugin/bada/Accelerometer.js
 define("cordova/plugin/bada/Accelerometer", function(require, exports, module) {
 var Acceleration = require('cordova/plugin/Acceleration');
 
@@ -3401,7 +3428,7 @@ module.exports = {
 
 });
 
-// file: lib\bada\plugin\bada\Camera.js
+// file: lib/bada/plugin/bada/Camera.js
 define("cordova/plugin/bada/Camera", function(require, exports, module) {
 module.exports = {
     _mainCamera: null,
@@ -3464,7 +3491,7 @@ module.exports = {
 
 });
 
-// file: lib\bada\plugin\bada\Capture.js
+// file: lib/bada/plugin/bada/Capture.js
 define("cordova/plugin/bada/Capture", function(require, exports, module) {
 module.exports = {
     startVideoCapture: function(success, fail, options) {
@@ -3539,7 +3566,7 @@ module.exports = {
 
 });
 
-// file: lib\bada\plugin\bada\Compass.js
+// file: lib/bada/plugin/bada/Compass.js
 define("cordova/plugin/bada/Compass", function(require, exports, module) {
 var CompassHeading = require('cordova/plugin/CompassHeading');
 
@@ -3563,7 +3590,7 @@ module.exports = {
 
 });
 
-// file: lib\bada\plugin\bada\Contacts.js
+// file: lib/bada/plugin/bada/Contacts.js
 define("cordova/plugin/bada/Contacts", function(require, exports, module) {
 var allowedAddressTypes = ["WORK", "HOME", "PREF"];
 
@@ -3823,157 +3850,7 @@ module.exports = {
 
 });
 
-// file: lib\bada\plugin\bada\File.js
-define("cordova/plugin/bada/File", function(require, exports, module) {
-var LocalFileSystem = require('cordova/plugin/LocalFileSystem'),
-    FileSystem = require('cordova/plugin/FileSystem');
-
-module.exports = {
-    /*
-     * @params: [type, size]
-     */
-    requestFileSystem: function(success, fail, params) {
-        console.log("File.requestFileSystem");
-        var type = params[0];
-        var name = "wgt-private";
-
-        if(type === LocalFileSystem.TEMPORARY) {
-            name = "wgt-private-tmp";
-        }
-        var resolveSuccess = function(dir) {
-            success({name: name, root: {name: name, fullPath: dir.fullPath}});
-        };
-        var resolveError = function(e) {
-            fail(e);
-        };
-        deviceapis.filesystem.resolve(resolveSuccess, resolveError, name, 'r');
-    },
-    /*
-     * @params: [fullPath, path, options]
-     */
-    getDirectory: function(success, fail, params) {
-        console.log("File.getDirectory");
-        var fullPath = params[0],
-            path = params[1],
-            options = params[2];
-        var resolveSuccess = function(dir) {
-            dir.createDirectory(path);
-        };
-        var resolveError = function(e) {
-            fail(e);
-        };
-        deviceapis.filesystem.resolve(resolveSuccess, resolveError, fullPath, 'rw');
-    },
-    /*
-     * @params: fullPath
-     */
-    removeRecursively: function(success, fail, params) {
-        console.log("File.removeRecursively");
-
-    },
-    /*
-     * @params: fullPath, path, options
-     */
-    getFile: function(success, fail, params) {
-        console.log("File.getFile");
-
-    },
-    /*
-     * @params: fullPath, path, options
-     */
-    readEntries: function(success, fail, params) {
-        console.log("File.readEntries");
-    },
-    /*
-     * @params: fullPath
-     */
-    getFileMetadata: function(success, fail, params) {
-        console.log("File.getFileMetadata");
-    },
-    /*
-     * @params: fullPath
-     */
-    getMetadata: function(success, fail, params) {
-        console.log("File.getMetadata");
-    },
-    /*
-     * @params: fullPath, metadataObject
-     */
-    setMetadata: function(success, fail, params) {
-        console.log("File.setMetadata");
-    },
-    /*
-     * @params: [fileName, enc]
-     */
-    readAsText: function(success, fail, params) {
-        console.log("File.readAsText");
-    },
-    /*
-     * @params: [srcPath, parent.fullPath, name]
-     */
-    moveTo: function(success, fail, params) {
-        console.log("File.moveTo");
-    },
-    /*
-     * @params: [srcPath, parent.fullPath, name]
-     */
-    copyTo: function(success, fail, params) {
-        console.log("File.copyTo");
-    },
-    /*
-     * @params: [fullPath]
-     */
-    remove: function(success, fail, params) {
-        console.log("File.remove");
-    },
-    /*
-     * @params: [fullPath]
-     */
-    getParent: function(success, fail, params) {
-        console.log("File.getParent");
-    },
-    /*
-     * @params: fileName
-     */
-    readAsDataURL: function(success, fail, params) {
-        console.log("File.readAsDataURL");
-    },
-    /*
-     * @params: fileName, text, position
-     */
-    write: function(success, fail, params) {
-        console.log("File.write");
-    },
-    /*
-     * @params: fileName, size
-     */
-    truncate: function(success, fail, params) {
-        console.log("File.truncate");
-    }
-};
-
-});
-
-// file: lib\bada\plugin\bada\FileTransfer.js
-define("cordova/plugin/bada/FileTransfer", function(require, exports, module) {
-module.exports = {
-    /*
-     * @params: filePath, server, fileKey, fileName, mimeType, params, trustAllHosts, chunkedMode
-     */
-    upload: function(success, fail, params) {
-        console.log("FileTransfer.upload");
-    },
-    /*
-     * @params: source, target
-     */
-    download: function(success, fail, params) {
-        console.log("FileTransfer.download");
-    }
-};
-
-});
-
-// file: lib\bada\plugin\bada\NetworkStatus.js
+// file: lib/bada/plugin/bada/NetworkStatus.js
 define("cordova/plugin/bada/NetworkStatus", function(require, exports, module) {
 var channel = require('cordova/channel'),
     Connection = require("cordova/plugin/Connection");
@@ -4018,7 +3895,7 @@ module.exports = {
 
 });
 
-// file: lib\bada\plugin\bada\Notification.js
+// file: lib/bada/plugin/bada/Notification.js
 define("cordova/plugin/bada/Notification", function(require, exports, module) {
 module.exports = {
     alert: function(message, alertCallback, title, buttonName) {
@@ -4073,7 +3950,7 @@ module.exports = {
 
 });
 
-// file: lib\bada\plugin\bada\device.js
+// file: lib/bada/plugin/bada/device.js
 define("cordova/plugin/bada/device", function(require, exports, module) {
 var channel = require('cordova/channel'),
     utils = require('cordova/utils');
@@ -4128,7 +4005,7 @@ Device.prototype.getDeviceInfo = function(success, fail, args) {
            me.platform = os_vendor + " " + os_name;
            me.version = os_version;
            me.uuid = uuid;
-           me.cordova = "2.1.0";
+           me.cordova = "2.1.0rc2";
            success(me);
        }
    };
@@ -4164,7 +4041,7 @@ module.exports = new Device();
 
 });
 
-// file: lib\common\plugin\battery.js
+// file: lib/common/plugin/battery.js
 define("cordova/plugin/battery", function(require, exports, module) {
 /**
  * This class contains information about the current battery status.
@@ -4255,7 +4132,7 @@ var battery = new Battery();
 module.exports = battery;
 });
 
-// file: lib\common\plugin\capture.js
+// file: lib/common/plugin/capture.js
 define("cordova/plugin/capture", function(require, exports, module) {
 var exec = require('cordova/exec'),
     MediaFile = require('cordova/plugin/MediaFile');
@@ -4332,7 +4209,7 @@ module.exports = new Capture();
 
 });
 
-// file: lib\common\plugin\compass.js
+// file: lib/common/plugin/compass.js
 define("cordova/plugin/compass", function(require, exports, module) {
 var exec = require('cordova/exec'),
     utils = require('cordova/utils'),
@@ -4437,7 +4314,7 @@ var exec = require('cordova/exec'),
 module.exports = compass;
 });
 
-// file: lib\common\plugin\console-via-logger.js
+// file: lib/common/plugin/console-via-logger.js
 define("cordova/plugin/console-via-logger", function(require, exports, module) {
 //------------------------------------------------------------------------------
 
@@ -4608,7 +4485,7 @@ for (var key in console) {
 
 });
 
-// file: lib\common\plugin\contacts.js
+// file: lib/common/plugin/contacts.js
 define("cordova/plugin/contacts", function(require, exports, module) {
 var exec = require('cordova/exec'),
     ContactError = require('cordova/plugin/ContactError'),
@@ -4671,7 +4548,7 @@ module.exports = contacts;
 
 });
 
-// file: lib\common\plugin\device.js
+// file: lib/common/plugin/device.js
 define("cordova/plugin/device", function(require, exports, module) {
 var channel = require('cordova/channel'),
     utils = require('cordova/utils'),
@@ -4739,7 +4616,7 @@ module.exports = new Device();
 
 });
 
-// file: lib\common\plugin\echo.js
+// file: lib/common/plugin/echo.js
 define("cordova/plugin/echo", function(require, exports, module) {
 var exec = require('cordova/exec');
 
@@ -4758,7 +4635,7 @@ module.exports = function(successCallback, errorCallback, message, forceAsync) {
 
 });
 
-// file: lib\common\plugin\geolocation.js
+// file: lib/common/plugin/geolocation.js
 define("cordova/plugin/geolocation", function(require, exports, module) {
 var utils = require('cordova/utils'),
     exec = require('cordova/exec'),
@@ -4956,7 +4833,7 @@ module.exports = geolocation;
 
 });
 
-// file: lib\common\plugin\logger.js
+// file: lib/common/plugin/logger.js
 define("cordova/plugin/logger", function(require, exports, module) {
 //------------------------------------------------------------------------------
 // The logger module exports the following properties/functions:
@@ -5183,7 +5060,7 @@ document.addEventListener("deviceready", logger.__onDeviceReady, false);
 
 });
 
-// file: lib\common\plugin\network.js
+// file: lib/common/plugin/network.js
 define("cordova/plugin/network", function(require, exports, module) {
 var exec = require('cordova/exec'),
     cordova = require('cordova'),
@@ -5247,7 +5124,7 @@ NetworkConnection.prototype.getInfo = function (successCallback, errorCallback) 
 module.exports = new NetworkConnection();
 });
 
-// file: lib\common\plugin\notification.js
+// file: lib/common/plugin/notification.js
 define("cordova/plugin/notification", function(require, exports, module) {
 var exec = require('cordova/exec');
 
@@ -5307,7 +5184,7 @@ module.exports = {
 };
 });
 
-// file: lib\common\plugin\requestFileSystem.js
+// file: lib/common/plugin/requestFileSystem.js
 define("cordova/plugin/requestFileSystem", function(require, exports, module) {
 var FileError = require('cordova/plugin/FileError'),
     FileSystem = require('cordova/plugin/FileSystem'),
@@ -5351,7 +5228,7 @@ var requestFileSystem = function(type, size, successCallback, errorCallback) {
 module.exports = requestFileSystem;
 });
 
-// file: lib\common\plugin\resolveLocalFileSystemURI.js
+// file: lib/common/plugin/resolveLocalFileSystemURI.js
 define("cordova/plugin/resolveLocalFileSystemURI", function(require, exports, module) {
 var DirectoryEntry = require('cordova/plugin/DirectoryEntry'),
     FileEntry = require('cordova/plugin/FileEntry'),
@@ -5404,7 +5281,7 @@ module.exports = function(uri, successCallback, errorCallback) {
 
 });
 
-// file: lib\common\plugin\splashscreen.js
+// file: lib/common/plugin/splashscreen.js
 define("cordova/plugin/splashscreen", function(require, exports, module) {
 var exec = require('cordova/exec');
 
@@ -5420,7 +5297,7 @@ var splashscreen = {
 module.exports = splashscreen;
 });
 
-// file: lib\common\utils.js
+// file: lib/common/utils.js
 define("cordova/utils", function(require, exports, module) {
 var utils = exports;
 
@@ -5614,7 +5491,7 @@ function formatted(object, formatChar) {
 
 window.cordova = require('cordova');
 
-// file: lib\scripts\bootstrap.js
+// file: lib/scripts/bootstrap.js
 (function (context) {
     var channel = require("cordova/channel"),
         _self = {
@@ -5668,7 +5545,7 @@ window.cordova = require('cordova');
 
 }(window));
 
-// file: lib\scripts\bootstrap-bada.js
+// file: lib/scripts/bootstrap-bada.js
 require('cordova/channel').onNativeReady.fire();
 
 
