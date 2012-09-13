@@ -1,6 +1,6 @@
-// commit a91a8f60b9f12bb74fa3a7f6c640308903ab73bf
+// commit 143f5221a6251c9cbccdedc57005c61551b97f12
 
-// File generated at :: Tue Sep 11 2012 17:59:00 GMT-0700 (PDT)
+// File generated at :: Wed Sep 12 2012 17:09:27 GMT-0700 (PDT)
 
 /*
  Licensed to the Apache Software Foundation (ASF) under one
@@ -682,13 +682,6 @@ module.exports = {
             }
         },
         Cordova: {
-            children: {
-                exec: {
-                    path: 'cordova/exec'
-                }
-            }
-        },
-        PhoneGap:{
             children: {
                 exec: {
                     path: 'cordova/exec'
@@ -4005,7 +3998,7 @@ Device.prototype.getDeviceInfo = function(success, fail, args) {
            me.platform = os_vendor + " " + os_name;
            me.version = os_version;
            me.uuid = uuid;
-           me.cordova = "2.1.0rc2";
+           me.cordova = "2.1.0";
            success(me);
        }
    };
