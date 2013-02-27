@@ -4901,9 +4901,6 @@ var argscheck = require('cordova/argscheck'),
     utils = require('cordova/utils'),
     exec = require('cordova/exec');
 
-// Tell cordova channel to wait on the CordovaInfoReady event
-channel.waitForInitialization('onCordovaInfoReady');
-
 /**
  * This represents the mobile device, and provides properties for inspecting the model, version, UUID of the
  * phone, etc.
